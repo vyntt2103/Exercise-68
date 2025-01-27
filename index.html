@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CD Collection</title>
+    <style>
+        table {
+            width: 50%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <button onclick="loadCDCatalog()">Get my CD collection</button>
+    <table id="cdTable">
+        <tr>
+            <th>Artist</th>
+            <th>Title</th>
+        </tr>
+    </table>
+
+    <script>
+        function loadCDCatalog() {
+            let xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    displayCDs(this);
+                }
+            };
+            xhttp.open("GET", "cd_catalog.xml", true);
+            xhttp.send();
+        }
+
+        function displayCDs(xml) {
+            let xmlDoc = xml.responseXML;
+            let table = document.getElementById("cdTable");
+            let cds = xmlDoc.getElementsByTagName("CD");
+
+            for (let i = 0; i < cds.length; i++) {
+                let row = table.insertRow();
+                let cell1 = row.insertCell(0);
+                let cell2 = row.insertCell(1);
+                
+                cell1.innerHTML = cds[i].getElementsByTagName("ARTIST")[0].childNodes[0].nodeValue;
+                cell2.innerHTML = cds[i].getElementsByTagName("TITLE")[0].childNodes[0].nodeValue;
+            }
+        }
+    </script>
+</body>
+</html>
